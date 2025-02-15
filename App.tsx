@@ -1,31 +1,27 @@
 import {NavigationContainer} from '@react-navigation/native';
-import HomeScreen from './src/HomeScreen';
+import HomeScreen from './src/screens/HomeScreen';
 import {createStackNavigator} from '@react-navigation/stack';
-import ConnectionSuccess from './src/ConnectionSuccess';
+import ConnectionSuccess from './src/screens/ConnectionSuccess';
+import {globalStyles} from './src/styles/globalStyles'; // Importar estilos globales
 
 const Stack = createStackNavigator();
 
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator
+        screenOptions={{
+          headerStyle: globalStyles.headerStyle, // Estilo del header
+          headerTintColor: '#fff', // Color del texto del header
+          headerTitleStyle: globalStyles.headerTitle, // Estilo del título
+          headerTitleAlign: 'center', // Centrar el título
+        }}>
+        <Stack.Screen name="Wifi Scanner - Wetechar" component={HomeScreen} />
         <Stack.Screen
-          name="Wifi Scanner - Wetechar"
-          options={{
-            title: 'Wifi Scanner - Wetechar',
-            headerTitleAlign: 'center',
-            headerStyle: {
-              backgroundColor: '#6200EE', // Color de fondo del header
-            },
-            headerTintColor: '#fff', // Color del texto del título
-            headerTitleStyle: {
-              fontWeight: 'bold',
-              fontSize: 20,
-            },
-          }}
-          component={HomeScreen}
+          name="ConnectionSuccess"
+          component={ConnectionSuccess}
+          options={{title: 'Conexión Exitosa'}} // Título personalizado
         />
-        <Stack.Screen name="ConnectionSuccess" component={ConnectionSuccess} />
       </Stack.Navigator>
     </NavigationContainer>
   );

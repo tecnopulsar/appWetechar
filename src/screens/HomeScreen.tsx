@@ -14,6 +14,7 @@ import WifiManager from 'react-native-wifi-reborn';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Prompt from 'react-native-prompt-android';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {globalStyles} from '../styles/globalStyles';
 
 // Definir un tipo para las redes Wi-Fi
 type WifiNetwork = {
@@ -302,7 +303,7 @@ const HomeScreen = ({navigation}: {navigation: any}) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Redes Wi-Fi disponibles</Text>
+      <Text style={globalStyles.title}>Conéctate a una red Wi-Fi</Text>
 
       <View style={styles.filterContainer}>
         <Ionicons
@@ -385,7 +386,7 @@ const styles = StyleSheet.create({
   refreshButton: {
     position: 'absolute',
     bottom: 20, // Separación del borde inferior
-    left: 20,  // Separación del borde izquierdo
+    left: 20, // Separación del borde izquierdo
     right: 20, // Separación del borde derecho
     flexDirection: 'row',
     alignItems: 'center',
@@ -395,7 +396,7 @@ const styles = StyleSheet.create({
     borderRadius: 10, // Bordes redondeados
     elevation: 4, // Sombra en Android
     shadowColor: '#000', // Sombra en iOS
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.3,
     shadowRadius: 4,
   },
