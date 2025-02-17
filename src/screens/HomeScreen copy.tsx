@@ -15,10 +15,6 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Prompt from 'react-native-prompt-android';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {globalStyles} from '../styles/globalStyles';
-import io from 'socket.io-client';
-
-// Dirección del servidor Socket.io (actualiza la IP según corresponda)
-const SOCKET_SERVER_URL = 'http://192.168.1.92:3000';
 
 // Definir un tipo para las redes Wi-Fi
 type WifiNetwork = {
@@ -130,38 +126,6 @@ const HomeScreen = ({navigation}: {navigation: any}) => {
   useEffect(() => {
     requestPermissions();
   }, []);
-
-  // Conectar a Socket.io para conectividad en tiempo real
-  useEffect(() => {
-    const socket = io(SOCKET_SERVER_URL);
-  
-    socket.on('connect', () => {
-      console.log('Conectado al servidor de Socket.io');
-      // Registrarse como "appmovil"
-      socket.emit('register', { type: 'appmovil' });
-    });
-  
-    socket.on('disconnect', () => {
-      console.log('Desconectado del servidor de Socket.io');
-    });
-  
-    // Escuchar actualización de clientes conectados
-    socket.on('clients-update', (data) => {
-      console.log('Actualización de clientes conectados:', data.clients);
-      // Aquí puedes actualizar el estado de la aplicación para mostrar la lista de clientes
-      // setConnectedClients(data.clients);
-    });
-  
-    // También sigue escuchando otros eventos, como "new-wifi-credentials"
-    socket.on('new-wifi-credentials', (data) => {
-      console.log('Nuevas credenciales recibidas:', data);
-      navigation.navigate('ConnectionSuccess', { ssid: data.ssid, password: data.password });
-    });
-  
-    return () => {
-      socket.disconnect();
-    };
-  }, [navigation]);
 
   // Solicitar permisos de ubicación
   const requestPermissions = async () => {
@@ -280,7 +244,7 @@ const HomeScreen = ({navigation}: {navigation: any}) => {
                     .then(() => {
                       console.log(`Conexión exitosa a la red: ${ssid}`);
                       savePassword(ssid, password); // Guardar la contraseña
-                      navigation.navigate('ConnectionSuccess', {ssid});
+                      navigation.navigate('ConnectionSuccess', {ssid}); // Navegar a la pantalla de éxito
                     })
                     .catch(error => {
                       console.log('Error conectando a la red Wi-Fi:', error);
@@ -306,7 +270,7 @@ const HomeScreen = ({navigation}: {navigation: any}) => {
         console.log(`Conectando a red abierta: ${ssid}`);
         await WifiManager.connectToSSID(ssid);
         console.log(`Conexión exitosa a la red: ${ssid}`);
-        navigation.navigate('ConnectionSuccess', {ssid});
+        navigation.navigate('ConnectionSuccess', {ssid}); // Navegar a la pantalla de éxito
       }
     } catch (error) {
       console.log('Error conectando a la red Wi-Fi:', error);
@@ -433,17 +397,17 @@ const styles = StyleSheet.create({
   },
   refreshButton: {
     position: 'absolute',
-    bottom: 20,
-    left: 20,
-    right: 20,
+    bottom: 20, // Separación del borde inferior
+    left: 20, // Separación del borde izquierdo
+    right: 20, // Separación del borde derecho
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: colors.primary,
     padding: 15,
-    borderRadius: 10,
-    elevation: 4,
-    shadowColor: '#000',
+    borderRadius: 10, // Bordes redondeados
+    elevation: 4, // Sombra en Android
+    shadowColor: '#000', // Sombra en iOS
     shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.3,
     shadowRadius: 4,
