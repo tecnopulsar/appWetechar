@@ -162,22 +162,34 @@ const HomeScreen = ({navigation}: {navigation: any}) => {
   const scanWifiNetworks = async (isFilterEnabled = filterEnabled) => {
     setIsLoading(true);
     setError(null);
-
+  
     try {
+      // Paso 1: Forzar un nuevo escaneo de redes
+      const isScanStarted = await WifiManager.reScanAndLoadWifiList();
+      console.log('Escaneo de redes iniciado:', isScanStarted);
+  
+      if (!isScanStarted) {
+        throw new Error('No se pudo iniciar el escaneo de redes.');
+      }
+  
+      // Paso 2: Esperar un breve tiempo para que el escaneo se complete
+      await new Promise((resolve) => setTimeout(resolve, 3000)); // Esperar 3 segundos
+  
+      // Paso 3: Cargar la lista de redes actualizada
       const wifiNetworks = await WifiManager.loadWifiList();
       console.log('Redes Wi-Fi encontradas:', wifiNetworks);
-
+  
       if (Array.isArray(wifiNetworks) && wifiNetworks.length > 0) {
         let filteredNetworks = wifiNetworks;
-
+  
         // Aplicar filtro solo si está activado
         if (isFilterEnabled) {
           filteredNetworks = wifiNetworks.filter(
-            network => network.SSID && network.SSID.includes('RaspberryAP'),
+            (network) => network.SSID && network.SSID.includes('RaspberryAP'),
           );
           console.log('Redes filtradas (RaspberryAP):', filteredNetworks);
         }
-
+  
         // Actualizar la lista de redes
         setWifiList(filteredNetworks);
       } else {
